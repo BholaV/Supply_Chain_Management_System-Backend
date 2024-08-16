@@ -18,19 +18,20 @@ export const AddSupplier = async (req, res, next) => {
 };
 
 //Remove Supplier API
-export const DeleteSupplier = async (req, res, next) => {
-    const contact = req.params.contact; 
+export const removeSupplier = async (req, res, next) => {
+    const { id } = req.params;
+    console.log(id)
     try {
-        const supplier = await Supplier.findOneAndRemove({ contact });
-        if (!supplier) {
-            return res.status(404).json({ message: "Supplier not found" });
-        }
-        return res.status(200).json({ message: "Supplier deleted successfully" });
+      const supplier = await Supplier.findOneAndDelete({ _id:id });
+      if (!supplier) {
+        return res.status(404).json({ message: "Supplier not found" });
+      }
+      return res.status(200).json({ message: "Supplier deleted successfully" });
     } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Error deleting supplier" });
+      console.error(err);
+      return res.status(500).json({ message: "Error deleting supplier" });
     }
-};
+  };
 
 
 //Find particular user
