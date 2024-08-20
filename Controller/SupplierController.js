@@ -22,16 +22,16 @@ export const removeSupplier = async (req, res, next) => {
     const { id } = req.params;
     console.log(id)
     try {
-      const supplier = await Supplier.findOneAndDelete({ _id:id });
-      if (!supplier) {
-        return res.status(404).json({ message: "Supplier not found" });
-      }
-      return res.status(200).json({ message: "Supplier deleted successfully" });
+        const supplier = await Supplier.findOneAndDelete({ _id: id });
+        if (!supplier) {
+            return res.status(404).json({ message: "Supplier not found" });
+        }
+        return res.status(200).json({ message: "Supplier deleted successfully" });
     } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Error deleting supplier" });
+        console.error(err);
+        return res.status(500).json({ message: "Error deleting supplier" });
     }
-  };
+};
 
 
 //Find particular user
@@ -47,9 +47,9 @@ export const findByEmail = async (req, res, next) => {
 
 // Update particular detail
 export const updateUser = async (req, res) => {
-    const { name, email, contact, userId } = req.body;
+    const { name, contact, productCategory, userId } = req.body;
     try {
-        const user = await Supplier.findByIdAndUpdate(userId, { name, email, contact }, { new: true });
+        const user = await Supplier.findByIdAndUpdate(userId, { name, contact, productCategory }, { new: true });
         if (!user) {
             return res.status(404).json({ error: 'Supplier not found' });
         }
@@ -83,11 +83,11 @@ export const updatePassword = async (req, res, next) => {
     }
 };
 
-export const ViewAllSupplier = (req,res,next)=>{
-    Supplier.find().then((supplier)=>{
-        return res.status(200).json({ message: "All Supplier..",supplier });
-        }
-    ).catch(err=>{
+export const ViewAllSupplier = (req, res, next) => {
+    Supplier.find().then((supplier) => {
+        return res.status(200).json({ message: "All Supplier..", supplier });
+    }
+    ).catch(err => {
         console.log(err);
         return res.status(500).json({ message: "Something went wrong" });
     });

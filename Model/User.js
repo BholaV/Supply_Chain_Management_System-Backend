@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
     }
 },{versionKey: false});
 
-const User = mongoose.model("user",userSchema);
+const User = mongoose.model("User",userSchema);
 
 User.checkPassword = (password, encryptedPassword)=>{
   return bcrypt.compareSync(password,encryptedPassword);
