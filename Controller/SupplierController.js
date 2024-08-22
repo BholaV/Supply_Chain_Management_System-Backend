@@ -46,7 +46,7 @@ export const findByEmail = async (req, res, next) => {
 };
 
 // Update particular detail
-export const updateUser = async (req, res) => {
+export const updateSupplier = async (req, res) => {
     const { name, contact, productCategory, userId } = req.body;
     try {
         const user = await Supplier.findByIdAndUpdate(userId, { name, contact, productCategory }, { new: true });
@@ -61,27 +61,7 @@ export const updateUser = async (req, res) => {
 };
 
 //update Password
-export const updatePassword = async (req, res, next) => {
-    try {
-        const { email, password, newPassword } = req.body;
-        console.log(email, password, newPassword);
-        const user = await Supplier.findOne({ email });
-        if (!user) {
-            return res.status(401).json({ message: "Unauthorized Supplier..." });
-        }
-        const isPasswordCorrect = await user.checkPass(password);
-        if (!isPasswordCorrect) {
-            return res.status(401).json({ message: "Password does not match" });
-        }
-        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-        user.password = hashedNewPassword;
-        await user.save();
-        return res.status(200).json({ message: "Password updated successfully" });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Something went wrong" });
-    }
-};
+
 
 export const ViewAllSupplier = (req, res, next) => {
     Supplier.find().then((supplier) => {
