@@ -10,7 +10,7 @@ export const SignUp = async(req, res, next) => {
     else
        await User.create(req.body)
             .then((user) => {
-                const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY,{expiresIn:'30d'});
+                const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY,{expiresIn:'7d'});
                 return res.status(201).json({ message: "User created successfully", user,token });
             })
             .catch((err) => {
@@ -20,24 +20,27 @@ export const SignUp = async(req, res, next) => {
 };
 
 //User Sign in
-export const SignIn = async (request, response, next) => {
-    // console.log(req.body)
+export const SignIn = async (req, res) => {
     try {
-        let user = await User.findOne({ email: request.body.email });
-        if (user) {
-            return user ? User.checkPassword(request.body.password, user.password) ? response.status(200).json({ message: "User Sign In successfully...", user })
-                : response.status(401).json({ error: "Invalid Password" })
-                : response.status(401).json({ error: "Bad request (Unauthorized user)" });
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(401).json({ error: "Unauthorized user" });
         }
-        return response.status(401).json({ error: "Bad request (Unauthorized user)" });
-    }
-    catch (err) {
-        console.log(err)
-        return response.status(500).json({ error: "Internal server error" });
-    }
-}
 
+        const isPasswordValid = await User.checkPassword(password, user.password);
+        
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: "Invalid password" });
+        }
 
+        return res.status(200).json({ message: "User signed in successfully", user });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
 export const updatePassword = async (req, res, next) => {
     try {
         const { email, password, newPassword } = req.body;
@@ -59,3 +62,12 @@ export const updatePassword = async (req, res, next) => {
         return res.status(500).json({ message: "Something went wrong" });
     }
 };
+
+export const generateToken = (req, res, next) => {
+    console.log(req.body);
+    const { email } = req.body;
+    const payload = { email };
+    const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '7d' });
+    console.log(`${email} ${token}`);
+    return res.status(200).json({ message: "Token created successfully..", token });
+  }
