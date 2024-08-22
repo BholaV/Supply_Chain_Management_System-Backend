@@ -49,3 +49,59 @@ export const getLowStockProducts = async (req, res, next) => {
       return res.status(500).json({ message: "Internal server error" });
     }
   };
+
+
+  export const removeStock =  async (req, res) => {
+    const { productId } = req.params;
+  
+    try {
+      // Find the product by ID
+      const product = await Product.findById(productId);
+      
+      // Check if the product exists
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      
+      // Check if there's enough stock
+      if (product.stock <= 0) {
+        return res.status(400).json({ message: "Out of stock" });
+      }
+      
+      // Update the stock
+      product.stock -= 1;
+      
+      // Save the updated product
+      await product.save();
+      
+      return res.status(200).json({ message: "Product stock updated", product });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  export const addStock = async (req, res) => {
+    const { productId } = req.params;
+    console.log(productId)
+    try {
+      // Find the product by ID
+      const product = await Product.findById(productId);
+      
+      // Check if the product exists
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      
+      // Increment the stock
+      product.stock += 1;
+      
+      // Save the updated product
+      await product.save();
+      
+      return res.status(200).json({ message: "Product stock updated", product });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  };
