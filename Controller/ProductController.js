@@ -105,3 +105,24 @@ export const getLowStockProducts = async (req, res, next) => {
       return res.status(500).json({ message: "Internal server error" });
     }
   };
+
+ export const checkStock = async (req, res) => {
+    const { productId } = req.params;
+  
+    try {
+      // Find the product by ID
+      const product = await Product.findById(productId);
+  
+      // Check if the product exists
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+  
+      // Return the stock information
+      return res.status(200).json({ stockAvailable: product.stock > 0 });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  };
+  
