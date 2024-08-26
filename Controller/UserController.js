@@ -1,8 +1,8 @@
 import User from "../Model/User.js";
 import jwt from 'jsonwebtoken';
 
-//User Sign up
-export const SignUp = async(req, res, next) => {
+// User Sign Up
+export const SignUp = async (req, res, next) => {
     console.log(req.body);
     const data = await User.findOne({ email: req.body.email });
     if (data)
@@ -10,8 +10,8 @@ export const SignUp = async(req, res, next) => {
     else
        await User.create(req.body)
             .then((user) => {
-                const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY,{expiresIn:'7d'});
-                return res.status(201).json({ message: "User created successfully", user,token });
+                const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '7d' });
+                return res.status(201).json({ message: "User created successfully", user, token });
             })
             .catch((err) => {
                 console.error(err);
@@ -19,7 +19,7 @@ export const SignUp = async(req, res, next) => {
             });
 };
 
-//User Sign in
+// User Sign In
 export const SignIn = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -30,7 +30,7 @@ export const SignIn = async (req, res) => {
         }
 
         const isPasswordValid = await User.checkPassword(password, user.password);
-        
+
         if (!isPasswordValid) {
             return res.status(401).json({ error: "Invalid password" });
         }
@@ -41,10 +41,11 @@ export const SignIn = async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 };
+
+// Update Password
 export const updatePassword = async (req, res, next) => {
     try {
         const { email, password, newPassword } = req.body;
-        // console.log(email, password, newPassword);
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ message: "Unauthorized Supplier..." });
@@ -63,11 +64,11 @@ export const updatePassword = async (req, res, next) => {
     }
 };
 
+// Generate Token
 export const generateToken = (req, res, next) => {
-    console.log(req.body);
     const { email } = req.body;
     const payload = { email };
     const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '7d' });
     console.log(`${email} ${token}`);
     return res.status(200).json({ message: "Token created successfully..", token });
-  }
+}

@@ -1,46 +1,48 @@
 import mongoose from "mongoose";
+
+// Product schema definition
 const productSchema = new mongoose.Schema({
     title: {
-        type: String,
-        required: true,
-        maxlength: 500,
+        type: String, // Product title
+        required: true, // Title is mandatory
+        maxlength: 500, // Maximum length of 500 characters
     },
     description: {
-        type: String,
-        required: true,
-        maxlength: 5000,
+        type: String, // Product description
+        required: true, // Description is mandatory
+        maxlength: 5000, // Maximum length of 5000 characters
     },
     price: {
-        type: Number,
-        required: true,
+        type: Number, // Product price
+        required: true, // Price is mandatory
     },
     discountPercentage: {
-        type: Number,
+        type: Number, // Discount percentage
         default: 0, // Default value if not provided
     },
     stock: {
-        type: Number,
-        default: 0,
+        type: Number, // Available stock
+        default: 0, // Default value if not provided
     },
     brand: {
-        type: String,
+        type: String, // Brand name
     },
     rating: {
-        type: Number,
-        default: 0,
+        type: Number, // Product rating
+        default: 0, // Default value if not provided
     },
     categoryName: {
-        type: String,
-        ref: 'Category', // Reference to Category collection if needed
+        type: String, // Category name
+        ref: 'Category', // Reference to Category collection
     },
     thumbnail: {
-        type: String,
+        type: String, // URL or path to thumbnail image
     },
     images: [{
-        type: String,
+        type: String, // Array of image URLs or paths
     }],
 }, {
-    timestamps: true // Enables `createdAt` and `updatedAt` timestamps
+    timestamps: true // Adds `createdAt` and `updatedAt` fields
 });
 
 const Product = mongoose.model('Product', productSchema);
