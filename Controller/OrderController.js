@@ -49,10 +49,10 @@ export const updateOrder = (req, res, next) => {
 
 // Remove an order by ID
 export const removeOrder = async (req, res, next) => {
-    const { id } = req.params;
-    console.log(id);
+    const { orderId } = req.params;
+    console.log(orderId+" orderId");
     try {
-        const order = await Order.findOneAndDelete({ _id: id });
+        const order = await Order.findOneAndDelete({ _id: orderId });
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
